@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Africa/Lagos',
 
     /*
     |--------------------------------------------------------------------------
@@ -162,6 +162,10 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
+        KingFlamez\Rave\RaveServiceProvider::class,
+        Unicodeveloper\Paystack\PaystackServiceProvider::class,
+
+
         /*
          * Package Service Providers...
          */
@@ -232,6 +236,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
+        'Rave' => KingFlamez\Rave\Facades\Rave::class,
+         'Paystack' => Unicodeveloper\Paystack\Facades\Paystack::class,
+
+
     ],
 
 ];

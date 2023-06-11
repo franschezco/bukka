@@ -3,52 +3,103 @@
 
 <head>
 <base href="/public">
-@include("admin/metalink")
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
+    <!-- Title  -->
+    <title>Meal - | Shop</title>
 
+    <!-- Favicon  -->
+    <link rel="icon" href="img/core-img/favicon.ico">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="css/core-style.css">
+    <link rel="stylesheet" href="style.css">
+    <script>$(".toggle-password").click(function () {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });</script>
 </head>
+
 <body>
-  <div class="container-scroller">
-    <!-- partial:partials/_navbar.html -->
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-          <span class="icon-menu"></span>
-        </button>
 
-        <ul class="navbar-nav navbar-nav-right">
-        <x-app-layout>
+    <div class="main-content-wrapper d-flex clearfix">
 
-</x-app-layout>
+        <!-- Mobile Nav (max width 767px)-->
+        <div class="mobile-nav">
+            <!-- Navbar Brand -->
+            <div class="amado-navbar-brand">
+                <a href="index.html"><img src="img/core-img/logo.png" alt=""></a>
             </div>
-          </li>
+            <!-- Navbar Toggler -->
+            <div class="amado-navbar-toggler">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
 
-        </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-          <span class="icon-menu"></span>
-        </button>
-      </div>
-    </nav>
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-    @include("admin/navbar")
+        <!-- Header Area Start -->
+        <header class="header-area clearfix">
+            <!-- Close Icon -->
+            <div class="nav-close">
+                <i class="fa fa-close" aria-hidden="true"></i>
+            </div>
+            <!-- Logo -->
+            <div class="logo">
+                <a href="index.html"><img src="img/core-img/logo.png" alt=""></a>
+            </div>
+            <!-- Amado Nav -->
+            <nav class="amado-nav">
+                <ul>
+
+                    <li><a href="{{url('redirects')}}">Orders</a></li>
+                    <li class="active"><a href="{{ url('foods')}}">Food</a></li>
+                    <li ><a href="{{ url('users') }}">Users</a></li>
+                    <li><a href="cart.html">Manage Payment</a></li>
+                    <li><a href="{{url('logout')}}">Logout</a></li>
+
+                </ul>
+            </nav>
+            <!-- Button Group -->
+            <div style="margin-top: 3em;"></div>
+
+            <!-- Social Button -->
+            <div class="social-info d-flex justify-content-between">
+                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+            </div>
+        </header>
+        <!-- Header Area End -->
 
 
-      <!-- partial -->
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-          <div class="col-md-6 grid-margin stretch-card">
+        <div class="products-catagories-area clearfix">
+            <div class="container">
+            <div style="margin-top: 5em;"></div>
+                <div class="row">
+                <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Update Food</h4>
+                  @if(session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                        @endif
                   <form class="forms-sample" action="{{url('/updatemeal',$meal->id)}}" method="POST" enctype="multipart/form-data">
                       @csrf
                   <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" class="form-control form-control-lg" name="title" value="{{$meal-> title}}" placeholder="Title" aria-label="Title">
+                    <label>Name</label>
+                    <input type="text" class="form-control form-control-lg" name="name" value="{{$meal-> name}}" placeholder="Name" aria-label="Name">
                   </div>
                   <div class="form-group">
                     <label>Price</label>
@@ -56,9 +107,9 @@
                   </div>
                   <div class="form-group">
                     <label>Change Food Image </label>
-                    <input type="file" class="form-control form-control-sm" name="image" value="/foodimage/{{$meal->image}}" placeholder="Username" aria-label="Username">
+                    <input type="file" class="form-control form-control-sm" name="image" value="/foodimage/{{$meal->image}}" placeholder="Image" aria-label="Image">
                   </div>
-                  <button type="submit"  class="btn-sm btn-inverse-success btn-fw">Update <i class="icon-paper"></i></button>
+                  <button type="submit"  class="btn btn- btn-dark">Update <i class="icon-paper"></i></button>
                   </form>
                 </div>
               </div>
@@ -72,9 +123,74 @@
                   </div>
               </div>
             </div>
-              </div> </div>
+              </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
 
-      @include("admin/footer")
+    <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-lg-4">
+                    <div class="single_widget_area">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="index.html"><img src="img/core-img/logo.png" alt="" height="150em" width="150em"></a>
+                        </div>
+                        <!-- Copywrite Text -->
+                        <p class="copywrite">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script> All rights reserved |
+                            This template is made with  by Franko.Tech
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-lg-8">
+                    <div class="single_widget_area">
+                        <!-- Footer Menu -->
+                        <div class="footer_menu">
+                            <nav class="navbar navbar-expand-lg justify-content-end">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent" aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                                <div class="collapse navbar-collapse" id="footerNavContent">
+                                    <ul class="navbar-nav ml-auto">
+                                      <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('/') }}">Shop</a>
+                                        </li>
+                                        <li  class="nav-item"><a class="nav-link" href="{{ url('/redirects') }}">Orders</a></li>
+                                        <li  class="nav-item"><a class="nav-link" href="{{ url('foods') }}">Food</a></li>
+                                        <li  class="nav-item"><a class="nav-link" href="{{ url('/users') }}">Users</a></li>
+                                        <li  class="nav-item"><a class="nav-link" href="cart.html">Manage Payment</a></li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+        <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+        <script src="js/jquery/jquery-2.2.4.min.js"></script>
+        <!-- Popper js -->
+        <script src="js/popper.min.js"></script>
+        <!-- Bootstrap js -->
+        <script src="js/bootstrap.min.js"></script>
+        <!-- Plugins js -->
+        <script src="js/plugins.js"></script>
+        <!-- Active js -->
+        <script src="js/active.js"></script>
+
+</body>
+
+</html>

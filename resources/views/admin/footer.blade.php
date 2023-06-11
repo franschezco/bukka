@@ -1,36 +1,62 @@
-<footer class="footer">
-          <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © bootstrapdash.com 2020</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>
-          </div>
-          <span class="text-muted d-block text-center text-sm-left d-sm-inline-block mt-2">Distributed By: <a href="https://www.themewagon.com/" target="_blank">ThemeWagon</a></span>
-        </footer>
+<footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-lg-4">
+                    <div class="single_widget_area">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="index.html"><img src="img/core-img/logo.png" alt="" height="150em" width="150em"></a>
+                        </div>
+                        <!-- Copywrite Text -->
+                        <p class="copywrite">
 
-        <!-- partial -->
-      </div>
-      <!-- main-panel ends -->
-    </div>
-    <!-- page-body-wrapper ends -->
-  </div>
-  <!-- container-scroller -->
+                            Copyright &copy;
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script> All rights reserved |
+                             by Franko.Tech
 
-  <!-- base:js -->
-  <script src="admin/vendors/base/vendor.bundle.base.js"></script>
-  <!-- endinject -->
-  <!-- Plugin js for this page-->
-  <!-- End plugin js for this page-->
-  <!-- inject:js -->
-  <script src="admin/js/off-canvas.js"></script>
-  <script src="admin/js/hoverable-collapse.js"></script>
-  <script src="admin/js/template.js"></script>
-  <!-- endinject -->
-  <!-- plugin js for this page -->
-  <script src="admin/vendors/chart.js/Chart.min.js"></script>
-  <script src="admin/vendors/jquery-bar-rating/jquery.barrating.min.js"></script>
-  <!-- End plugin js for this page -->
-  <!-- Custom js for this page-->
-  <script src="admin/js/dashboard.js"></script>
-  <!-- End custom js for this page-->
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-lg-8">
+                    <div class="single_widget_area">
+                        <!-- Footer Menu -->
+                        <div class="footer_menu">
+                            <nav class="navbar navbar-expand-lg justify-content-end">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent" aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                                <div class="collapse navbar-collapse" id="footerNavContent">
+                                    <ul class="navbar-nav ml-auto">
+                                      <li class="nav-item">
+                                            <a class="nav-link" href="{{ url('/') }}">Shop</a>
+                                        </li>
+                                        <li  class="nav-item"><a class="nav-link" href="{{ url('/redirects') }}">Orders</a></li>
+                                        <li  class="nav-item"><a class="nav-link" href="{{ url('foods') }}">Food</a></li>
+                                        <li  class="nav-item"><a class="nav-link" href="{{ url('/users') }}">Users</a></li>
+                                        <li  class="nav-item"><a class="nav-link" href="cart.html">Manage Payment</a></li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+    <script src="js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Plugins js -->
+    <script src="js/plugins.js"></script>
+    <!-- Active js -->
+    <script src="js/active.js"></script>
+
 </body>
 
 </html>

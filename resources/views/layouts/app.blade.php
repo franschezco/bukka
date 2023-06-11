@@ -21,7 +21,8 @@
     <body class="font-sans antialiased">
         <x-jet-banner />
 
-           @livewire('navigation-menu')
+        <div class="min-h-screen bg-gray-100">
+            @livewire('navigation-menu')
 
             <!-- Page Heading -->
             @if (isset($header))
@@ -32,7 +33,11 @@
                 </header>
             @endif
 
-
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
+        </div>
 
         @stack('modals')
 
