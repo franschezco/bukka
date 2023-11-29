@@ -1,6 +1,6 @@
-<p align="center"><a href="https://frankoe.xyz" target="_blank">![bukka](https://github.com/franschezco/bukka/assets/101509031/ed835699-641e-44bd-9ab2-11593a8ebd3c)
-</a></p>
 
+
+![bukka](https://github.com/franschezco/bukka/assets/101509031/fdd71b89-d962-4b8a-ab78-4a2c15efc0f6)
 
 
 **<p align="center"><a href="https://bukka-demo.live" target="_blank"> View Demo</a></p>**
@@ -73,6 +73,11 @@ Explain how to run automated tests for this system:
 
     php artisan test 
 
+
+## Mobile App Bukka Demo
+![bukka2](https://github.com/franschezco/bukka/assets/101509031/d56ee729-bc41-42ae-8ba6-4997dbbf627d)
+            
+  **<p align="center"><a href="https://github.com/franschezco/Bukka-App" target="_blank"> View Repo</a></p>**
 ## Security Vulnerabilities
 
 If you discover a security vulnerability within the project, please send an e-mail to Frankoe via [frankojarkarta@gmail.com](mailto:frankojarkarta@gmail.com). All security vulnerabilities will be promptly addressed.
