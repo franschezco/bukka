@@ -73,7 +73,7 @@
                 <ul>
 
                     <li > <a href="{{url('/')}}"><i class="fa fa-cutlery " aria-hidden="true"></i> Meals</a></li>
-                    <li><a href="{{url('/cart')}}"><i class="fa fa-shopping-bag " aria-hidden="true"></i> Cart <span>({{ Cart::count() }})</span></a></li>
+                    <li><a href="{{url('/cart')}}"><i class="fa fa-shopping-bag " aria-hidden="true"></i> Cart <span>({{ Cart::getContent()->count() }})</span></a></li>
 
                     @if(Auth::check() && Auth::user()->usertype=='0')
                     <li><a href="{{('order')}}"><i class="fa fa-motorcycle " aria-hidden="true"></i> Order</a></li>
@@ -202,7 +202,7 @@
 
 
                                         <li class="nav-item"> <a class="nav-link" href="{{url('/')}}">Meals</a></li>
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('/cart')}}"> Cart <span>({{ Cart::count() }})</span></a></li>
+                                        <li class="nav-item"> <a class="nav-link" href="{{url('/cart')}}"> Cart <span>({{ Cart::getContent()->count() }})</span></a></li>
 
                     @if(Auth::check() && Auth::user()->usertype=='0')
                     <li class="nav-item"> <a class="nav-link" href="#"></i> Order</a></li>

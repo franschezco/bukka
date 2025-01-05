@@ -1,22 +1,38 @@
-@include("admin/header")
+@include("admin.sidebar")
 
+<div class="container table-responsive py-5">
+    <table class="table table-bordered table-hover">
+        <thead class="thead bg-warning">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Customer Name</th>
+                <th scope="col">Order Details</th>
+                <th scope="col">Price</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach($order as $order)
+<tr>
+    <th scope="row">{{ $key + 1 }}</th>
+    <td>{{ $order->name }}</td>
+    <td>{{ $order->meal }} (x{{ $order->qty }})</td>
+    <td>£ {{ number_format($order->price, 2) }}</td>
+    <td><span class="badge badge-success">{{ $order->status }}</span></td>
+    <td>
+        <a href="{{ url('/deleteorder', $order->id) }}">
+            <button type="button" class="btn-sm btn-danger">Delete <i class="fa fa-trash"></i></button>
+        </a>
+    </td>
+</tr>
+@empty
+<tr>
+    <td colspan="6" class="text-center">No orders found.</td>
+</tr>
+@endforelse
 
-    @include("admin/navbar")
-
-
-      <!-- partial -->
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-sm-12 mb-4 mb-xl-0">
-              <h4 class="font-weight-bold text-dark">Hi, welcome back!</h4>
-              <p class="font-weight-normal mb-2 text-muted">APRIL 1, 2019</p>
-            </div>
-          </div>
-       </div>
-
-
-
-
-      @include("admin/footer")
-
+        </tbody>
+    </table>
+</div>
+@include("admin.footer")

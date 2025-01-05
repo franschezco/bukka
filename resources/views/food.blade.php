@@ -33,7 +33,7 @@
                         <input type="hidden" value="1" name="quantity">
                                         </div>
                                         <div class="menu-price">
-                                             <span>₦ {{$meal->price}}
+                                             <span>£ {{$meal->price}}
                                             </span>
                                         </div>
                                    </div>

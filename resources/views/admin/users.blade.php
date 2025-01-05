@@ -9,7 +9,7 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title  -->
-    <title>Meal - | Orders</title>
+    <title>Meal - | Users</title>
 
     <!-- Favicon  -->
     <link rel="icon" href="img/core-img/favicon.ico">
@@ -53,7 +53,6 @@
                     <li><a href="{{url('redirects')}}">Orders</a></li>
                     <li><a href="{{ url('foods')}}">Food</a></li>
                     <li class="active"><a href="{{ url('users') }}">Users</a></li>
-                    <li><a href="cart.html">Manage Payment</a></li>
                     <li><a href="{{url('logout')}}">Logout</a></li>
 
                 </ul>
@@ -62,12 +61,7 @@
             <div style="margin-top: 3em;"></div>
 
             <!-- Social Button -->
-            <div class="social-info d-flex justify-content-between">
-                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-            </div>
+            
         </header>
         <!-- Header Area End -->
 

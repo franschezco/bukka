@@ -53,7 +53,6 @@
                     <li class="active"><a href="{{ url('/redirects') }}">Orders</a></li>
                     <li><a href="{{ url('foods') }}">Food</a></li>
                     <li><a href="{{ url('users') }}">Users</a></li>
-                    <li><a href="cart.html">Manage Payment</a></li>
                     <li><a href="{{url('logout')}}">Logout</a></li>
 
                 </ul>

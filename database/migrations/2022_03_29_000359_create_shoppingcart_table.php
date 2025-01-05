@@ -11,7 +11,10 @@ class CreateShoppingcartTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('cart.database.table'), function (Blueprint $table) {
+        // Use a default table name if the config value is missing
+        $tableName = config('cart.database.table', 'shoppingcart');
+
+        Schema::create($tableName, function (Blueprint $table) {
             $table->string('identifier');
             $table->string('instance');
             $table->longText('content');
@@ -20,11 +23,13 @@ class CreateShoppingcartTable extends Migration
             $table->primary(['identifier', 'instance']);
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down()
     {
-        Schema::drop(config('cart.database.table'));
+        $tableName = config('cart.database.table', 'shoppingcart');
+        Schema::dropIfExists($tableName);
     }
 }

@@ -3,7 +3,6 @@
 
 <head>
 <base href="/public">
-@livewireStyles
     <meta charset="UTF-8">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -91,11 +90,10 @@
                 <ul>
 
                     <li > <a href="{{url('/')}}"><i class="fa fa-cutlery " aria-hidden="true"></i> Meals</a></li>
-                    <li class="active"><a href="{{url('/cart')}}"><i class="fa fa-shopping-bag " aria-hidden="true"></i> Cart <span>({{ Cart::count() }})</span></a></li>
+                    <li class="active"><a href="{{url('/cart')}}"><i class="fa fa-shopping-bag " aria-hidden="true"></i> Cart <span>({{ Cart::getContent()->count() }})</span></a></li>
 
                     @if(Auth::check() && Auth::user()->usertype=='0')
                     <li><a href="{{('order')}}"><i class="fa fa-motorcycle " aria-hidden="true"></i> Order</a></li>
-                    <li><a href="{{ url('profile') }}"><i class="fa fa-user " aria-hidden="true"></i> Profile</a></li>
                     <li><a href="{{url('logout')}}"><i class="fa fa-sign-out " aria-hidden="true"></i> logout</a></li>
                     @elseif(Auth::check() && Auth::user()->usertype=='1')
                     <li><a href="{{ url('/redirects')}}"><i class="fa fa-sitemap " aria-hidden="true"></i> Control Panel</a></li>
@@ -111,12 +109,7 @@
 @endif
 <div style="margin-top: 3em;"></div>
             <!-- Social Button -->
-            <div class="social-info d-flex justify-content-between">
-                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-            </div>
+            
         </header>
 
 
@@ -146,64 +139,10 @@
     </div>
 
 
-
-
-    <footer class="footer_area clearfix">
-        <div class="container">
-            <div class="row align-items-center">
-                <!-- Single Widget Area -->
-                <div class="col-12 col-lg-4">
-                    <div class="single_widget_area">
-                        <!-- Logo -->
-                        <div class="footer-logo mr-50">
-                            <a href="index.html"><img src="img/core-img/logo.png" alt="" height="150em" width="150em"></a>
-                        </div>
-                        <!-- Copywrite Text -->
-                        <p class="copywrite">
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script> All rights reserved |
-                              by Franko.Tech
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    </div>
-                </div>
-                <!-- Single Widget Area -->
-                <div class="col-12 col-lg-8">
-                    <div class="single_widget_area">
-                        <!-- Footer Menu -->
-                        <div class="footer_menu">
-                            <nav class="navbar navbar-expand-lg justify-content-end">
-                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent" aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                                <div class="collapse navbar-collapse" id="footerNavContent">
-                                    <ul class="navbar-nav ml-auto">
-
-
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('/')}}">Meals</a></li>
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('/cart')}}"> Cart <span>({{ Cart::count() }})</span></a></li>
-
-                    @if(Auth::check() && Auth::user()->usertype=='0')
-                    <li class="nav-item"> <a class="nav-link" href="{{('order')}}"></i> Order</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('profile') }}"> Profile</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{url('logout')}}"> logout</a></li>
-                    @elseif(Auth::check() && Auth::user()->usertype=='1')
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('/redirects')}}"> Control Panel</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{url('logout')}}"> logout</a></li>
-                    @else
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('register') }}"></i> Register</a></li>
-                         @endif           </ul>
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
-    <script src="js/jquery/jquery-2.2.4.min.js"></script>
+   
+</body>
+<script src="js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->
     <script src="js/popper.min.js"></script>
     <!-- Bootstrap js -->
@@ -213,7 +152,35 @@
     <!-- Active js -->
     <script src="js/active.js"></script>
     <script src="js/modal.js"></script>
-    @livewireScripts
-</body>
+<script>
+    // Clear the cart when the page is loaded
+    $(document).ready(function () {
+    // Clear the cart via AJAX
+    $.ajax({
+        url: "{{ url('/clear-cart') }}", // Route to clear the cart
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}" // Include CSRF token for security
+        },
+        success: function (response) {
+            if (response.status === 'success') {
+                console.log('Cart cleared successfully');
+            } else {
+                console.log('Failed to clear cart');
+            }
+        },
+        error: function (error) {
+            console.log('Error clearing cart:', error);
+        }
+    });
 
+    // Prevent going back to the previous page
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+        alert('You cannot go back to the previous page!');
+        window.history.pushState(null, "", window.location.href); // Push state again
+    };
+});
+
+</script>
 </html>

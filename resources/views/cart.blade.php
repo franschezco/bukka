@@ -2,13 +2,12 @@
 <html lang="en">
 
 <head>
-<base href="/public">
-@livewireStyles
+    <base href="/public">
+
     <meta charset="UTF-8">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title  -->
     <title>Meal - | Cart</title>
@@ -19,87 +18,126 @@
     <!-- Core Style CSS -->
     <link rel="stylesheet" href="css/core-style.css">
     <link rel="stylesheet" href="style.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- Custom Styles for Buttons -->
+    <style>
+      /* Container for quantity buttons and delete icon */
+.quantity-container {
+    display: flex;             /* Use flexbox for alignment */
+    align-items: center;       /* Vertically align content */
+    justify-content: space-between; /* Add space between elements */
+    gap: 10px;                 /* Add spacing between buttons */
+    flex-wrap: nowrap;         /* Prevent wrapping */
+}
+
+/* Quantity buttons */
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity button {
+    padding: 5px 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+.quantity button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Input field for quantity */
+.qty-text {
+    text-align: center;
+    width: 50px;
+    height: 35px;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+/* Delete button (Trash icon) */
+.delete-btn {
+    font-size: 18px;         /* Set size of the icon */
+    color: red;              /* Set color to red */
+    cursor: pointer;         /* Make it clickable */
+    background: none;        /* No background */
+    border: none;            /* Remove borders */
+    display: flex;           /* Align content */
+    align-items: center;
+    justify-content: center;
+    padding: 5px;            /* Add padding for touch targets */
+}
+
+/* Adjust layout on small screens */
+@media (max-width: 768px) {
+    .quantity-container {
+        flex-direction: row; /* Keep row layout for smaller screens */
+        gap: 5px;            /* Adjust spacing */
+    }
+
+    .delete-btn {
+        font-size: 20px;     /* Slightly increase size for touch targets */
+        padding: 8px;        /* Add padding for easier clicking */
+    }
+
+    .quantity button {
+        padding: 8px 12px;   /* Increase button size slightly */
+        font-size: 16px;     /* Adjust font size */
+    }
+
+    .qty-text {
+        width: 40px;         /* Make input field narrower */
+        height: 30px;        /* Adjust height */
+    }
+}
+
+    </style>
 </head>
 
 <body>
-    <!-- Search Wrapper Area Start -->
-    <div class="search-wrapper section-padding-100">
-        <div class="search-close">
-            <i class="fa fa-close" aria-hidden="true"></i>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="search-content">
-                        <form action="#" method="get">
-                            <input type="search" name="search" id="search" placeholder="Type your keyword...">
-                            <button type="submit"><img src="img/core-img/search.png" alt=""></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Search Wrapper Area End -->
-
-    <!-- ##### Main Content Wrapper Start ##### -->
+    <!-- Main Content Wrapper Start -->
     <div class="main-content-wrapper d-flex clearfix">
 
-        <!-- Mobile Nav (max width 767px)-->
+        <!-- Mobile Nav -->
         <div class="mobile-nav">
-            <!-- Navbar Brand -->
             <div class="amado-navbar-brand">
-                <a href="index.html"><img src="img/core-img/logo.png" alt=""></a>
+                <a href="index.html"><img src="img/core-img/logo.png" alt="Logo"></a>
             </div>
-            <!-- Navbar Toggler -->
             <div class="amado-navbar-toggler">
                 <span></span><span></span><span></span>
             </div>
         </div>
 
-        <!-- Header Area Start -->
+        <!-- Header Area -->
         <header class="header-area clearfix">
-            <!-- Close Icon -->
             <div class="nav-close">
                 <i class="fa fa-close" aria-hidden="true"></i>
             </div>
-            <!-- Logo -->
             <div class="logo">
-                <a href="index.html"><img src="img/core-img/logo.png" alt=""></a>
+                <a href="index.html"><img src="img/core-img/logo.png" alt="Logo"></a>
             </div>
-            <!-- Amado Nav -->
             <nav class="amado-nav">
                 <ul>
-
-                    <li > <a href="{{url('/')}}"><i class="fa fa-cutlery " aria-hidden="true"></i> Meals</a></li>
-                    <li class="active"><a href="{{url('/cart')}}"><i class="fa fa-shopping-bag " aria-hidden="true"></i> Cart <span>({{ Cart::count() }})</span></a></li>
-
+                    <li><a href="{{url('/')}}"><i class="fa fa-cutlery "></i> Meals</a></li>
+                    <li class="active"><a href="{{url('/cart')}}"><i class="fa fa-shopping-bag"></i> Cart <span>({{ \Cart::getContent()->count() }})</span></a></li>
                     @if(Auth::check() && Auth::user()->usertype=='0')
-                    <li><a href="{{('order')}}"><i class="fa fa-motorcycle " aria-hidden="true"></i> Order</a></li>
-                    <li><a href="{{ url('profile') }}"><i class="fa fa-user " aria-hidden="true"></i> Profile</a></li>
-                    <li><a href="{{url('logout')}}"><i class="fa fa-sign-out " aria-hidden="true"></i> logout</a></li>
+                        <li><a href="{{('order')}}"><i class="fa fa-motorcycle"></i> Order</a></li>
+                        <li><a href="{{url('logout')}}"><i class="fa fa-sign-out"></i> logout</a></li>
                     @elseif(Auth::check() && Auth::user()->usertype=='1')
-                    <li><a href="{{ url('/redirects')}}"><i class="fa fa-sitemap " aria-hidden="true"></i> Control Panel</a></li>
-                    <li><a href="{{url('logout')}}"><i class="fa fa-sign-out " aria-hidden="true"></i> logout</a></li>
+                        <li><a href="{{ url('/redirects')}}"><i class="fa fa-sitemap"></i> Control Panel</a></li>
+                        <li><a href="{{url('logout')}}"><i class="fa fa-sign-out"></i> logout</a></li>
                     @else
-                    <li><a href="{{ route('register') }}"><i class="fa fa-user-plus " aria-hidden="true"></i> Register</a></li>
+                        <li><a href="{{ route('register') }}"><i class="fa fa-user-plus"></i> Register</a></li>
+                    @endif
                 </ul>
             </nav>
-            <!-- Button Group -->
-
-@endif
-<div style="margin-top: 4em;"></div>
-            <!-- Social Button -->
-            <div class="social-info d-flex justify-content-between">
-                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-            </div>
         </header>
-        <!-- Header Area End -->
 
+        <!-- Cart Table Area -->
         <div class="cart-table-area section-padding-100">
             <div class="container-fluid">
                 <div class="row">
@@ -107,174 +145,161 @@
                         <div class="cart-title mt-50">
                             <h2>Meal Cart</h2>
                         </div>
-                        @if (Cart::count() > 0)
+                        @if (\Cart::getContent()->count() > 0)
                         <div class="cart-table clearfix">
                             <table class="table table-responsive">
                                 <thead>
                                     <tr>
-
                                         <th>Name</th>
                                         <th>Price</th>
                                         <th>Plates</th>
-                                        <th>Action</th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @foreach(Cart::content() as $row)
+                                @foreach(\Cart::getContent() as $row)
                                     <tr>
+                                        <td><h5>{{$row->name}}</h5></td>
+                                        <td><span>£ {{$row->price}}</span></td>
+                                        <td>
+    <div class="quantity-container">
+        <!-- Update Form -->
+        <form action="{{ url('/update') }}" method="POST" id="update-{{$row->id}}">
+            @csrf
+            <input type="hidden" name="id" value="{{$row->id}}">
+            <input type="hidden" name="quantity" id="hidden-qty-{{$row->id}}" value="{{$row->quantity}}">
+            <div class="quantity">
+                <button type="button" class="qty-minus" data-id="{{$row->id}}">-</button>
+                <input type="number" id="qty-{{$row->id}}" value="{{$row->quantity}}" disabled class="qty-text">
+                <button type="button" class="qty-plus" data-id="{{$row->id}}">+</button>
+            </div>
+        </form>
 
-                                        <td class="cart_product_desc" >
-                                            <h5>{{$row->name}}</h5>
-                                        </td>
-                                        <td class="price">
-                                            <span>₦ {{$row->price}}</span>
-                                        </td>
-                                        <td class="qty">
-                                            <div class="qty-btn d-flex">
+        <!-- Delete Button -->
+        <form action="{{ url('/destroy/' . $row->id) }}" method="POST" id="delete-form-{{$row->id}}">
+            @csrf
+            @method('DELETE')
+            <button type="submit" id="delete-btn-{{$row->id}}" class="delete-btn" style="display: {{ $row->quantity == 1 ? 'inline-block' : 'none' }};">
+                <i class="fa fa-trash"></i>
+            </button>
+        </form>
+    </div>
+</td>
 
-                                            <div class="quantity">
-                                            <form action="{{ url('/update') }}" method="POST" id="update">
-                                                   <input type="number" class="qty-text" id="qty" step="1" min="1" max="300" name="quantity" value="{{$row->qty}}">
-                                                </div>
-                                            </div>
-                                        </td>
-
-
-
-
-                                        <td >
-                                        <div class="qty-btn d-flex">
-
-                                        @csrf
-<input type="hidden" name="id" value="{{$row->rowId}}">
-                                        <button type="submit"  style=" color:green; background: none;border:none; padding:0; margin-right:10px;" data-toggle="tooltip" data-placement="left"
-                                                    title="Update Cart"><i class="fa fa-refresh"></i></button></form>
-
-                                        <form action="{{ url('/destroy', $row->rowId) }}" method="POST" id="destroy">
-                                    @csrf
-                                    {{ method_field('DELETE') }}
-                                        <button type="submit" style=" color:red; background: none;border:none; padding:0;"><i class="fa fa-trash"></i></button> </form></div></td>
-</form>
                                     </tr>
-                                    @endforeach
-
-
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        @else
+                        <center><h3>No items in Cart!</h3></center>
+                        @endif
                     </div>
-                    @else
-        <div class="spacer"style="margin-top:4em;"></div>
-       <center> <h3>No items in Cart!</h3></center>
-        <div class="spacer"style="margin-top:2em;"></div>
-        <a href="{{ url('/') }}" class="button">Continue Shopping</a>
-        <div class="spacer"style="margin-top:2em;"></div>
-                </div>
-        @endif
                     <div class="col-12 col-lg-4">
                         <div class="cart-summary">
                             <h5>Cart Total</h5>
                             <ul class="summary-table">
-                                <li><span>subtotal:</span> <span>₦ {{ Cart::subtotal() }}</span></li>
-                                <li><span>delivery:</span> <span>₦ {{ Cart::tax() }}</span></li>
-                                <li><span>total:</span> <span>₦ {{ Cart::total() }}</span></li>
+                                <li><span>subtotal:</span> <span id="subtotal">£ {{ \Cart::getSubTotal() }}</span></li>
+                                <li><span>delivery:</span> <span id="delivery">£ {{ \Cart::getConditions()->sum('value') }}</span></li>
+                                <li><span>total:</span> <span id="total">£ {{ \Cart::getTotal() }}</span></li>
                             </ul>
-                            @if (Cart::count() > 0)
- @if (Auth::check())
-                            <div class="cart-btn mt-100">
-                                <a href="{{ url('checkout') }}" class="btn amado-btn w-100">Checkout</a>
-                            </div>
-                           @else
-
-
-
-                            <div class="cart-btn mt-100">
-                                <a href="{{ route('login') }}" class="btn amado-btn w-100">Login to CheckOut</a>
-                            </div>
-
+                            
+                            @if (\Cart::getContent()->count() > 0)
+                                @if (Auth::check())
+                                    <div class="cart-btn mt-100">
+                                        <a href="{{ url('checkout') }}" class="btn amado-btn w-100">Checkout</a>
+                                    </div>
+                                @else
+                                    <div class="cart-btn mt-100">
+                                        <a href="{{ route('login') }}" class="btn amado-btn w-100">Login to CheckOut</a>
+                                    </div>
+                                @endif
                             @endif
-@endif
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ##### Main Content Wrapper End ##### -->
 
-    <!-- ##### Newsletter Area Start ##### -->
-
-    <!-- ##### Newsletter Area End ##### -->
-
-    <!-- ##### Footer Area Start ##### -->
-     <footer class="footer_area clearfix">
-        <div class="container">
-            <div class="row align-items-center">
-                <!-- Single Widget Area -->
-                <div class="col-12 col-lg-4">
-                    <div class="single_widget_area">
-                        <!-- Logo -->
-                        <div class="footer-logo mr-50">
-                            <a href="index.html"><img src="img/core-img/logo.png" alt="" height="150em" width="150em"></a>
-                        </div>
-                        <!-- Copywrite Text -->
-                        <p class="copywrite">
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script> All rights reserved |
-                              by Franko.Tech
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    </div>
-                </div>
-                <!-- Single Widget Area -->
-                <div class="col-12 col-lg-8">
-                    <div class="single_widget_area">
-                        <!-- Footer Menu -->
-                        <div class="footer_menu">
-                            <nav class="navbar navbar-expand-lg justify-content-end">
-                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent" aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                                <div class="collapse navbar-collapse" id="footerNavContent">
-                                    <ul class="navbar-nav ml-auto">
-
-
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('/')}}">Meals</a></li>
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('/cart')}}"> Cart <span>({{ Cart::count() }})</span></a></li>
-
-                    @if(Auth::check() && Auth::user()->usertype=='0')
-                    <li class="nav-item"> <a class="nav-link" href="#"></i> Order</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('profile') }}"> Profile</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{url('logout')}}"> logout</a></li>
-                    @elseif(Auth::check() && Auth::user()->usertype=='1')
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('/redirects')}}"> Control Panel</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{url('logout')}}"> logout</a></li>
-                    @else
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('register') }}"></i> Register</a></li>
-                         @endif           </ul>
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- ##### Footer Area End ##### -->
-
-    <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+    <!-- Scripts -->
     <script src="js/jquery/jquery-2.2.4.min.js"></script>
-    <!-- Popper js -->
-    <script src="js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Plugins js -->
-    <script src="js/plugins.js"></script>
-    <!-- Active js -->
-    <script src="js/active.js"></script>
-    @livewireScripts
-</body>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/active.js"></script>
+ <!-- JavaScript for Quantity and Totals -->
+    <script>
+  
 
+  document.addEventListener('DOMContentLoaded', function () {
+    // Event Listener for Plus and Minus Buttons
+    document.querySelectorAll('.qty-plus, .qty-minus').forEach(button => {
+        button.addEventListener('click', async function () {
+            // Get required data attributes and elements
+            const id = this.getAttribute('data-id');
+            const inputField = document.getElementById(`qty-${id}`);
+            const hiddenInput = document.getElementById(`hidden-qty-${id}`);
+            const form = document.getElementById(`update-${id}`);
+            const deleteBtn = document.getElementById(`delete-btn-${id}`); // Bin icon
+            let value = parseInt(inputField.value);
+
+            // Update quantity based on button clicked (+ or -)
+            value = this.classList.contains('qty-plus') ? value + 1 : value - 1;
+
+            // Ensure value is within a valid range
+            if (value > 0 && value <= 300) {
+                // Update visible and hidden fields
+                inputField.value = value;
+                hiddenInput.value = value;
+
+                // Show bin icon only when quantity is 1
+                deleteBtn.style.display = value === 1 ? 'inline-block' : 'none';
+
+                try {
+                    // Prepare form data for submission
+                    const formData = new FormData(form);
+
+                    // Send an AJAX request to update the cart
+                    const response = await fetch("/update-cart", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                        body: formData,
+                    });
+
+                    // Parse the response as JSON
+                    const data = await response.json();
+
+                    // Update totals dynamically if successful
+                    if (data.success) {
+                        document.getElementById('subtotal').innerText = `£ ${data.subtotal}`;
+                        document.getElementById('delivery').innerText = `£ ${data.delivery}`;
+                        document.getElementById('total').innerText = `£ ${data.total}`;
+                    } else {
+                        alert('Failed to update totals: ' + data.error);
+                    }
+                } catch (error) {
+                    console.error('Error updating totals:', error);
+                }
+            }
+        });
+    });
+
+    // Delete button action
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            if (confirm('Are you sure you want to remove this item?')) {
+                // Redirect to delete route or perform AJAX request for deletion
+                window.location.href = `/destroy/${id}`;
+            }
+        });
+    });
+});
+
+
+
+    </script>
+</body>
 </html>

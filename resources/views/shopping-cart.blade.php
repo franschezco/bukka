@@ -206,7 +206,7 @@ a:hover {
                             <option value="5">5</option>
 </select> </div>
 
-                                <div class="col"><p style="margin-top:2em;">₦ {{ $data-> price }}</p></div>
+                                <div class="col"><p style="margin-top:2em;">£ {{ $data-> price }}</p></div>
                                 <div class="col">
                             <span class="close" style="color:red; display: inline-block; text-align: right; width: 50%; padding-top:-181px;">&#10005;</span></div>
                            <input type="hidden" name="amount" value="{{ $data-> price }}">

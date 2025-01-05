@@ -1398,3 +1398,178 @@ img {
 /* ##### The End ##### */
 
 /*# sourceMappingURL=core-style.css.map */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+body {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.header-area {
+  animation: fadeIn 1s ease-in-out 0.2s;
+}
+
+.products-catagories-area {
+  animation: fadeIn 1s ease-in-out 0.4s;
+}
+
+.single-product-wrapper {
+  animation: fadeIn 1s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.product-description {
+  padding: 15px;
+}
+
+.cart button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.cart button img {
+  transition: transform 0.3s ease;
+}
+
+.cart button:hover img {
+  transform: scale(1.1);
+}
+
+.single-product-wrapper:nth-child(1) { animation-delay: 0.5s; }
+.single-product-wrapper:nth-child(2) { animation-delay: 0.7s; }
+.single-product-wrapper:nth-child(3) { animation-delay: 0.9s; }
+
+.products-catagories-area {
+  padding-top: 20px; /* Adds 10px padding at the top of the product categories section */
+}
+/* Toast Container */
+.toast-container {
+  position: fixed;
+  bottom: 20px; /* Default position for desktop */
+  right: 20px;
+  z-index: 99999; /* Ensure it stays above other elements */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Toast Message */
+.toast {
+  padding: 15px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slide-in 0.5s, fade-out 0.5s 2.5s forwards;
+}
+
+/* Success Toast */
+.toast.success {
+  background-color: #28a745;
+}
+
+/* Error Toast */
+.toast.error {
+  background-color: #dc3545;
+}
+
+/* Close Button */
+.toast .close-btn {
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+/* Toast Animations */
+@keyframes slide-in {
+  from {
+      transform: translateX(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  to {
+      opacity: 0;
+  }
+}
+
+/* Responsive Design for Mobile */
+@media screen and (max-width: 768px) {
+  .toast-container {
+      width: 90%; /* Make the toast container wider for mobile */
+      right: 5%; /* Position slightly inside the screen */
+      bottom: 10px; /* Closer to the bottom */
+  }
+
+  .toast {
+      font-size: 14px; /* Smaller font size for mobile */
+      padding: 12px 15px; /* Adjust padding for smaller screens */
+  }
+}
+.product-img img {
+  width: 100%; /* Make image width responsive */
+  height: 100%; /* Stretch height to fill container */
+  object-fit: cover; /* Ensure the image covers the space without distortion */
+}
+
+
+
+.quantity {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.quantity button {
+  padding: 5px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+}
+
+.quantity button:hover {
+  background-color: #e0e0e0;
+}
+
+.qty-text {
+  text-align: center;
+  width: 50px;
+  height: 40px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+}
+
+.spacer {
+  margin-top: 2em;
+}
+
+/* Responsive adjustment for smaller screens */
+@media (max-width: 768px) {
+.qty-text {
+width: 40px; /* Smaller width for mobile devices */
+height: 30px; /* Smaller height for mobile devices */
+}
+}
+ 

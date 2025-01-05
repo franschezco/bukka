@@ -21,6 +21,106 @@
 
 </head>
 <style>
+
+
+    .container {
+        padding: 20px;
+    }
+
+    h2, h4 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .order-card {
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow size */
+        padding: 15px; /* Reduced padding */
+        margin-bottom: 15px; /* Reduced margin */
+        transition: all 0.3s ease;
+    }
+
+    .order-card:hover {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px; /* Reduced margin */
+    }
+
+    .order-header h5 {
+        margin: 0;
+        font-size: 16px; /* Smaller font size */
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 3px 8px; /* Smaller padding */
+        border-radius: 12px; /* Smaller badge size */
+        font-size: 10px; /* Smaller font size */
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .status-received {
+        background-color: #17a2b8;
+        color: #ffffff;
+    }
+
+    .status-shipping {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .status-delivered {
+        background-color: #28a745;
+        color: #ffffff;
+    }
+
+    .order-details {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 10px; /* Reduced margin */
+        font-size: 14px; /* Smaller text */
+    }
+
+    .order-details p {
+        flex: 1 1 50%;
+        margin: 3px 0; /* Smaller spacing */
+    }
+
+    .order-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn-outline-warning {
+        padding: 5px 12px; /* Smaller button */
+        border: 1px solid #ffc107;
+        color: #ffc107;
+        border-radius: 5px;
+        font-size: 12px; /* Smaller font */
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-warning:hover {
+        background-color: #ffc107;
+        color: #ffffff;
+    }
+
+    .no-orders {
+        text-align: center;
+        color: #6c757d;
+        font-size: 14px;
+        padding: 15px 0;
+    }
+
+
     .text-center {
         text-align: center;
     }
@@ -255,12 +355,12 @@
             <nav class="amado-nav">
                 <ul>
 
-                    <li> <a href="#"><i class="fa fa-cutlery " aria-hidden="true"></i> Meals</a></li>
-                    <li><a href="{{url('/cart')}}"><i class="fa fa-shopping-bag " aria-hidden="true"></i> Cart <span>({{ Cart::count() }})</span></a></li>
+                    <li> <a href="{{url('/redirects')}}"><i class="fa fa-cutlery " aria-hidden="true"></i> Meals</a></li>
+                    <li><a href="{{url('/cart')}}"><i class="fa fa-shopping-bag " aria-hidden="true"></i> Cart <span>({{ Cart::getContent()->count() }})</span></a></li>
 
                     @if(Auth::check() && Auth::user()->usertype=='0')
                     <li class="active"><a href="{{('order')}}"><i class="fa fa-motorcycle " aria-hidden="true"></i> Order</a></li>
-                    <li><a href="{{ url('profile') }}"><i class="fa fa-user " aria-hidden="true"></i> Profile</a></li>
+   
                     <li><a href="{{url('logout')}}"><i class="fa fa-sign-out " aria-hidden="true"></i> logout</a></li>
                     @elseif(Auth::check() && Auth::user()->usertype=='1')
                     <li><a href="{{ url('/redirects')}}"><i class="fa fa-sitemap " aria-hidden="true"></i> Control Panel</a></li>
@@ -278,190 +378,83 @@
 
 
             <!-- Social Button -->
-            <div class="social-info d-flex justify-content-between">
-                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-            </div>
+           
         </header>
         <!-- Header Area End -->
 
 
         <div class="products-catagories-area clearfix">
-            <div class="container">
-
-                <div class="row">
-                    <div class="col-12">
-
-                        <div class="row">
-                            <div class="col-12 col-lg-12">
-                                <div class="cart-title mt-50">
-                                    <h2> Track Order </h2>
-                                </div>
-
-                                <div class="container">
-                                    <ul class="container--tabs">
-                                        <li class="tab tabs--active">Orders</li>
-                                        <li class="tab">Completed Orders</li>
-                                    </ul>
-
-                                    <div class="container-content">
-                                        <div class="content content--active">
-
-                                            <div class="row">
-                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
-                                                    @foreach ($mealorder as $mealorder)
-
-
-                                                    <div class="card influencer-profile-data">
-                                                        <div class="user-avatar-info">
-
-                                                            <div class="m-b-20">
-                                                            <div style="margin-top: 2em;"></div>
-
-                                                            </div>
-
-                                                            <!--  <div class="float-right"><a href="#" class="user-avatar-email text-secondary">www.henrybarbara.com</a></div> -->
-                                                            <div class="user-avatar-address">
-                                                                 <div class="ribbon blue"><span>{{ $mealorder -> status }}</span></div>
-                                                                <p class="border-bottom pb-3">
-                                                                    <span class="d-xl-inline-block d-block mb-2"><i class="fa fa-map-marker mr-2 text-primary "></i> {{ $mealorder -> address }}</span><p></p>
-                                                                    <span class="mb-2 ml-xl-4 d-xl-inline-block d-block"><i class="fa fa-clock-o mr-2 text-danger "></i>Ordered date: {{ $mealorder -> created_at }} </span>
-                                                                    <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">
-                                                                    </span>
-                                                                    <form action="{{url('order-tracking')}}" method="post">
-                                                                        @csrf
-                                                                        <input type="hidden" value="{{ $mealorder -> created_at }}" name="created">
-
-                                                                    <button type="submit" class="btn btn-outline-warning">View Details</button>
-                                                                    </form>
-                                                                </p>
-
-                                                            </div>
-
-
-                                                        </div>
-                                                    </div>
-                                                    <div style="margin-top: 4em;"></div>@endforeach
-                                                </div>
-                                                <div style="margin-top: 2em;"></div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                    <div class="content">
-
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
-@foreach ($mealord as $mealord)
-
-
-<div class="card influencer-profile-data">
-    <div class="user-avatar-info">
-        <div class="m-b-20">
-        <div style="margin-top: 2em;"></div>
-
-        </div>
-        <!--  <div class="float-right"><a href="#" class="user-avatar-email text-secondary">www.henrybarbara.com</a></div> -->
-        <div class="user-avatar-address">
-        <div class="ribbon"><span>{{ $mealord -> status }}</span></div>
-            <p class="border-bottom pb-3">
-                <span class="d-xl-inline-block d-block mb-2"><i class="fa fa-map-marker mr-2 text-primary "></i> {{ $mealord -> address }}</span><p></p>
-                <span class="mb-2 ml-xl-4 d-xl-inline-block d-block"><i class="fa fa-clock-o mr-2 text-danger "></i>Ordered date: {{ $mealord -> created_at }} </span>
-                <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">
-                </span>
-                <form action="{{url('order-tracking')}}" method="post">
-                                                                        @csrf
-                                                                        <input type="hidden" value="{{ $mealord -> created_at }}" name="created">
-
-                                                                    <button type="submit" class="btn btn-outline-warning">View Details</button>
-                                                                    </form></p>
-
-        </div>
-
-
-    </div>
-</div>
-<div style="margin-top: 4em;"></div>@endforeach
-</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="margin-top: 2em;"></div>
-
-                            <div class="row">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    <div style="margin-top: 4em;"></div>
-    <footer class="footer_area clearfix">
         <div class="container">
-            <div class="row align-items-center">
-                <!-- Single Widget Area -->
-                <div class="col-12 col-lg-4">
-                    <div class="single_widget_area">
-                        <!-- Logo -->
-                        <div class="footer-logo mr-50">
-                            <a href="index.html"><img src="img/core-img/logo.png" alt="" height="150em" width="150em"></a>
-                        </div>
-                        <!-- Copywrite Text -->
-                        <p class="copywrite">
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script> All rights reserved |
-                            by Franko.Tech
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    </div>
-                </div>
-                <!-- Single Widget Area -->
-                <div class="col-12 col-lg-8">
-                    <div class="single_widget_area">
-                        <!-- Footer Menu -->
-                        <div class="footer_menu">
-                            <nav class="navbar navbar-expand-lg justify-content-end">
-                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent" aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
-                                <div class="collapse navbar-collapse" id="footerNavContent">
-                                    <ul class="navbar-nav ml-auto">
+    <h2>Track Orders</h2>
 
+    <!-- Active Orders Section -->
+    <h4>Active Orders</h4>
+    @forelse ($mealorder as $order)
+        <div class="order-card">
+            <div class="order-header">
+                <h5>{{ $order->meal }}</h5>
+                <!-- Status Badge -->
+                <span class="status-badge 
+                    {{ strtolower($order->status) == 'received' ? 'status-received' : 
+                    (strtolower($order->status) == 'shipping' ? 'status-shipping' : 'status-delivered') }}">
+                    {{ strtoupper($order->status) }}
+                </span>
+            </div>
 
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('/')}}">Meals</a></li>
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('/cart')}}"> Cart <span>({{ Cart::count() }})</span></a></li>
+            <!-- Order Details -->
+            <div class="order-details">
+                <p><strong>Address:</strong> {{ $order->address }}</p>
+                <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($order->created_at)->format('Y-m-d') }}</p>
+                <p><strong>Quantity:</strong> {{ $order->qty }}</p>
+                <p><strong>Price:</strong> £{{ $order->price }}</p>
+            </div>
 
-                                        @if(Auth::check() && Auth::user()->usertype=='0')
-                                        <li class="nav-item"> <a class="nav-link" href="#"></i> Order</a></li>
-                                        <li class="nav-item"> <a class="nav-link" href="{{ url('profile') }}"> Profile</a></li>
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('logout')}}"> logout</a></li>
-                                        @elseif(Auth::check() && Auth::user()->usertype=='1')
-                                        <li class="nav-item"> <a class="nav-link" href="{{ url('/redirects')}}"> Control Panel</a></li>
-                                        <li class="nav-item"> <a class="nav-link" href="{{url('logout')}}"> logout</a></li>
-                                        @else
-                                        <li class="nav-item"> <a class="nav-link" href="{{ route('register') }}"></i> Register</a></li>
-                                        @endif
-                                    </ul>
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
+            <!-- Actions -->
+            <div class="order-actions">
+                <form action="{{ url('order-tracking') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="created" value="{{ $order->created_at }}">
+                    <button type="submit" class="btn-outline-warning">View Details</button>
+                </form>
             </div>
         </div>
-    </footer>
+    @empty
+        <p class="no-orders">No active orders found.</p>
+    @endforelse
+
+    <!-- Completed Orders Section -->
+    <h4>Completed Orders</h4>
+    @forelse ($mealord as $completedOrder)
+        <div class="order-card">
+            <div class="order-header">
+                <h5>{{ $completedOrder->meal }}</h5>
+                <span class="status-badge status-delivered">Delivered</span>
+            </div>
+
+            <div class="order-details">
+                <p><strong>Address:</strong> {{ $completedOrder->address }}</p>
+                <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($completedOrder->created_at)->format('Y-m-d') }}</p>
+                <p><strong>Quantity:</strong> {{ $completedOrder->qty }}</p>
+                <p><strong>Price:</strong> £{{ $completedOrder->price }}</p>
+            </div>
+
+            <div class="order-actions">
+                <form action="{{ url('order-tracking') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="created" value="{{ $completedOrder->created_at }}">
+                    <button type="submit" class="btn-outline-warning">View Details</button>
+                </form>
+            </div>
+        </div>
+    @empty
+        <p class="no-orders">No completed orders found.</p>
+    @endforelse
+</div>
+
+    </div>
+</div>
+   <div style="margin-top: 4em;"></div>
+   
     <script>
         const tabs = document.querySelectorAll(".tab");
         const contents = document.querySelectorAll(".content");

@@ -1,39 +1,42 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Http\Request;
 use App\Models\Food;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use  Gloudemans\Shoppingcart\Facades\Cart;
-use App\Models\Orders;
-use App\Models\requests;
+use App\Models\Order;
+use App\Models\Requests;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use KingFlamez\Rave\Facades\Rave as Flutterwave;
-use Illuminate\Support\Facades\Redirect;
-use Unicodeveloper\Paystack\Facades\Paystack;
 
 class HomeController extends Controller
 {
+    // Redirect based on user type
     public function redirects()
     {
         $usertype = Auth::user()->usertype;
-        if ($usertype == '1') {
-            return view('admin.dashboard');
-        } else {
-            $meal = food::all();
-            return view('index', compact("meal"));
+    
+        if ($usertype == '1') { // Admin
+            $order = Order::all(); // Fetch all orders for admin
+            return view('admin.dashboard', compact('order')); // Pass orders to admin dashboard
+        } else { // Regular user
+            $meal = Food::all(); // Fetch all meals for regular user
+            return view('index', compact('meal')); // Pass meals to regular user view
         }
     }
+    
+
+    // Display home page
     public function index()
     {
-        $meal = food::all();
-        return view("index", compact("meal"));
+        $meal = Food::all(); // Ensure it always returns a collection
+        return view('index', compact('meal'));
     }
 
-
+    // Logout user
     public function logout()
     {
         Session::flush();
@@ -41,222 +44,201 @@ class HomeController extends Controller
         return redirect('login');
     }
 
-    public function addToCart($id)
-    {
-        $product = food::find($id);
+    // Add to cart
+    public function addToCart(Request $request, $id)
+{
+    $product = Food::find($id);
 
-        $name = $product->name;
-        $quantity = 1;
-        $price = $product->price;
-        $image = $product->image;
-
-
-        Cart::add(['id' => $id, 'name' => $name, 'qty' => 1, 'price' => $price, 'options' => ['image' => $image]]);
-        return redirect()->back()->with('success', 'Meal added to cart successfully!');
+    if (!$product) {
+        return response()->json(['error' => 'Product not found'], 404);
     }
 
+    \Cart::add([
+        'id' => $id,
+        'name' => $product->name,
+        'price' => $product->price,
+        'quantity' => 1,
+        'attributes' => [
+            'image' => $product->image2,
+        ]
+    ]);
+
+    return response()->json([
+        'success' => 'Item added to cart!',
+        'count' => \Cart::getTotalQuantity(),
+    ]);
+}
+
+    // View cart
     public function viewcart()
     {
-        return view("cart");
+        return view('cart');
     }
 
+    // Remove item from cart
     public function destroy($id)
     {
-        $cart = Cart::content()->where('rowId', $id);
-        if ($cart->isNotEmpty()) {
-            Cart::remove($id);
-
-            return back();
-        } else {
-            return view("shopping-cart");
+        try {
+            Cart::remove($id); // Remove item from cart
+            return back()->with('success', 'Item removed successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to remove item.');
         }
     }
-    public function update(Request $request)
-    {
-        $rowId = $request->id;
-        $quantity = $request->quantity;
-        Cart::update($rowId, ['qty' => $quantity]);
-        return back();
-    }
 
+    // Update cart item quantity
+    public function updateCart(Request $request)
+    {
+        try {
+            // Validate required fields
+            $request->validate([
+                'id' => 'required|string',
+                'quantity' => 'required|integer|min:1|max:300',
+            ]);
+    
+            // Update the cart item
+            \Cart::update($request->id, [
+                'quantity' => [
+                    'relative' => false,
+                    'value' => $request->quantity,
+                ],
+            ]);
+    
+            // Return updated totals
+            return response()->json([
+                'success' => true,
+                'subtotal' => number_format(\Cart::getSubTotal(), 2),
+                'delivery' => number_format(\Cart::getConditions()->sum('value'), 2),
+                'total' => number_format(\Cart::getTotal(), 2),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+    
+
+
+    // Checkout page
     public function checkout()
     {
-
         return view('checkout');
     }
+
+    // User profile page
     public function profile()
     {
-
         return view('profile');
     }
+
+    // Receipt page
     public function receipt()
     {
-
         return view('order-received');
     }
+
+    // View orders
     public function order()
     {
-        $user= Auth::user()->name;
-        $mealorder=DB::table('requests')
-        ->select('*')
-        ->where('name',$user)
-        ->where('status','=', 'ORDERED')
-        ->orwhere('name',$user)
-        ->where('status','=', 'SHIPPING')
-        ->get();
-
-        $mealord=DB::table('requests')
-        ->select('*')
-        ->where('name',$user)
-        ->where('status','=', 'delivered')
-        ->get();
-
-
-
-        return view('order', compact('mealord','mealorder'));
-
+        // Get the currently authenticated user's name
+        $user = Auth::user()->name;
+    
+        // Fetch **Active Orders** (status: 'received' or 'shipping')
+        $mealorder = DB::table('orders')
+            ->where('name', $user)
+            ->whereIn('status', ['received', 'shipping']) // Corrected status
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        // Fetch **Completed Orders** (status: 'delivered')
+        $mealord = DB::table('orders')
+            ->where('name', $user)
+            ->where('status', 'delivered') // Corrected status
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        // Return view with orders
+        return view('order', compact('mealorder', 'mealord'));
     }
+    
 
+    // Order Tracking Logic
     public function tracking(Request $request)
-    { $user=Auth::user()->name;
-        $created=$request->created;
-        $meal=DB::table('requests')
-        ->select('*')
-        ->where('name',$user)
-        ->where('created_at','=', $created)
-        ->get();
-
-
-        $foods=DB::table('orders')
-        ->select('*')
-        ->where('name',$user)
-        ->where('created_at','=', $created)
-        ->get();
-        return view('order-tracking', compact('meal','foods'));
-    }
-
-
-    public function checkouts(Request $request)
     {
+        // Get the created_at value passed from the form input
+        $created = $request->input('created');
 
-        $paymenttype = $request->check;
-        if ($paymenttype == 'Pay On Delivery') {
-            foreach ($request->meal as $key => $meal) {
-                $data = new Orders;
-                $data->meal = $meal;
-                $data->price = $request->price[$key];
-                $data->qty = $request->qty[$key];
-                $data->name = $request->name;
-                $data->phone = $request->phone;
-                $data->address = $request->address;
-                $data->location = $request->location;
-                $data->paymenttype = 'Pay On Delivery';
-                $data->date = Carbon::today()->format('d-m-y');;
-                $data->amount =  Cart::total();
-                $data->save();
-            }
+        // Fetch orders based on the created_at timestamp
+        $meals = DB::table('orders')
+            ->where('created_at', $created)
+            ->get();
 
+        // Pass meals and foods for displaying order details
+        $foods = DB::table('orders')
+            ->where('created_at', $created)
+            ->get();
 
-            $data = new requests;
-            $data->name = $request->name;
-            $data->phone = $request->phone;
-            $data->address = $request->address;
-            $data->location = $request->location;
-            $data->paymenttype = $request->paymenttype;
-            $data->date = Carbon::today()->format('d-m-y');;
-            $data->amount =  Cart::total();
-            $data->status = "ORDERED";
-            $data->save();
-
-            Cart::destroy();
-            return redirect('order-received');
-        } elseif ($paymenttype == 'Pay On Flutterwave') {
-            $reference = Flutterwave::generateReference();
-
-            // Enter the details of the payment
-            $data = [
-                'payment_options' => 'card,banktransfer',
-                'amount' => Cart::total(),
-                'email' => Auth::user()->email,
-                'tx_ref' => $reference,
-                'currency' => "NGN",
-                'redirect_url' => route('callback'),
-                'customer' => [
-                    'email' => 'frankojarkarta@gmail.com',
-                    "phone_number" => request()->phone,
-                    "name" => request()->name
-                ],
-
-                "customizations" => [
-                    "title" => 'Food Ordered',
-                    "description" => ""
-                ]
-            ];
-
-            $payment = Flutterwave::initializePayment($data);
-
-
-            if ($payment['status'] !== 'success') {
-                // notify something went wrong
-                return;
-            } else {
-
-                foreach ($request->meal as $key => $meal) {
-                    $data = new Orders;
-                    $data->meal = $meal;
-                    $data->price = $request->price[$key];
-                    $data->qty = $request->qty[$key];
-                    $data->name = $request->name;
-                    $data->phone = $request->phone;
-                    $data->address = $request->address;
-                    $data->location = $request->location;
-                    $data->paymenttype = 'Card';
-                    $data->date = "date(Y-m-d)";
-                    $data->amount =  Cart::total();
-                }
-                $data = new requests;
-                $data->name = $request->name;
-                $data->phone = $request->phone;
-                $data->address = $request->address;
-                $data->location = $request->location;
-                $data->paymenttype = $request->paymenttype;
-                $data->date = "date(Y-m-d)";
-                $data->amount =  Cart::total();
-                $data->status = "recieved";
-                $data->save();
-
-                $data->save();
-                Cart::destroy();
-            };
-            return redirect($payment['data']['link']);
-        }
+        // Return the view with required data
+        return view('order-tracking', ['meal' => $meals, 'foods' => $foods]);
     }
-    public function callback()
+
+
+
+public function handleCOD(Request $request)
+{
+    // Validate the request
+    $request->validate([
+        'meal' => 'required|array',
+        'price' => 'required|array',
+        'qty' => 'required|array',
+        'name' => 'required|string|max:255',
+        'phone' => 'required|string|max:15',
+        'address' => 'required|string|max:255',
+        'location' => 'required|string|max:255',
+    ]);
+
+    // Save the orders
+    foreach ($request->meal as $key => $meal) {
+        Order::create([
+            'meal' => $meal,
+            'price' => $request->price[$key],                      // Price for each meal
+            'qty' => $request->qty[$key],                          // Quantity for each meal
+            'price' => $request->price[$key] * $request->qty[$key], // Calculate total price for each item
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'location' => $request->location,
+            'paymenttype' => 'COD',                                // Payment type
+            'TransactionId' => null,                               // COD doesn't need a transaction ID
+            'status' => 'received',                                // Default status
+            'created_at' => now(),                                 // Laravel timestamp
+            'updated_at' => now(),
+        ]);
+    }
+
+    // Clear the cart after saving orders
+    Cart::clear();
+
+    // Redirect to order-received page
+    return redirect('order-received')->with('success', 'Order placed successfully!');
+}
+
+    
+    public function handleCardPayment(Request $request)
     {
-
-        $status = request()->status;
-
-        //if payment is successful
-        if ($status ==  'successful') {
-
-            $transactionID = Flutterwave::getTransactionIDFromCallback();
-            $data = Flutterwave::verifyTransaction($transactionID);
-
-
-            return redirect('order-received');
-        } elseif ($status ==  'cancelled') {
-            //Put desired action/code after transaction has been cancelled here
-        } else {
-            //Put desired action/code after transaction has failed here
-        }
-        // Get the transaction from your DB using the transaction reference (txref)
-        // Check if you have previously given value for the transaction. If you have, redirect to your successpage else, continue
-        // Confirm that the currency on your db transaction is equal to the returned currency
-        // Confirm that the db transaction amount is equal to the returned amount
-        // Update the db transaction record (including parameters that didn't exist before the transaction is completed. for audit purpose)
-        // Give value for the transaction
-        // Update the transaction to note that you have given value for the transaction
-        // You can also redirect to your success page from here
-
+        // Validate request
+        $request->validate([
+            'meal' => 'required|array',
+            'price' => 'required|array',
+            'qty' => 'required|array',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+        ]);
+    
+        // Redirect to payment gateway page (Example: Flutterwave)
+        return redirect('payment-gateway')->with('paymentData', $request->all());
     }
+    
+   
 }

@@ -14,18 +14,19 @@ class CreateOrdersTable extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->string("name")->nullable();
-            $table->string("phone")->nullable();
-            $table->string("address")->nullable();
-            $table->string("location")->nullable();
-            $table->string("paymenttype")->nullable();
-            $table->string("TransactionId")->nullable();
-            $table->string("meal")->nullable();
-            $table->string("qty")->nullable();
-            $table->string("amount")->nullable();
-            $table->string('status')->default('recieved');
-            $table->timestamps();
+            $table->id();                                  // Primary Key
+            $table->string('name');                        // Customer Name
+            $table->string('phone');                       // Phone Number
+            $table->string('address');                     // Address
+            $table->string('location');                    // Location
+            $table->string('paymenttype');                 // Payment Type (COD/Card)
+            $table->string('TransactionId')->nullable();   // Transaction ID (optional for COD)
+            $table->string('meal');                        // Meal Name or Description
+            $table->integer('qty');                        // Quantity Ordered
+            $table->decimal('price', 10, 2)->nullable();   // Item Price (nullable for simplicity)
+            $table->decimal('amount', 10, 2);              // Total Amount
+            $table->string('status')->default('recieved'); // Default Status
+            $table->timestamps();                          // Timestamps: created_at, updated_at
         });
     }
 
@@ -39,3 +40,4 @@ class CreateOrdersTable extends Migration
         Schema::dropIfExists('orders');
     }
 }
+
